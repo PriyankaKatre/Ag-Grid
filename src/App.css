@@ -1,0 +1,14 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.green-cell {
+    background-color: #00b8a9;
+}
+
+.red-row {
+    background-color: #c3195d !important; 
+}
