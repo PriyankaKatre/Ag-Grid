@@ -6,9 +6,13 @@
 }
 
 .green-cell {
-    background-color: #00b8a9;
+    background-color: #c0f7c4;
 }
 
 .red-row {
-    background-color: #c3195d !important; 
+    background-color: #f4d2cb !important; 
+}
+
+.ag-group-value {
+  display: inline-flex;
 }

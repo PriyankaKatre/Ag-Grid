@@ -4,11 +4,15 @@ import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the 
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
 
 function Table() {
-    const myCellComponent = (p) => { 
+    const myCellComponent = (params) => { 
         return (
             <>
-                <button onClick={() => window.alert("Action")}>+</button>
-                {p.value}
+                <button
+                    onClick={() => alert(`${params.data.make} ${params.value}`)}
+                    style={{ border: '1px solid black' }}
+                >
+                    Click Me
+                </button>
             </>
         )
     }
@@ -23,7 +27,7 @@ function Table() {
     })
 
     const rowClassRules = useMemo(() => ({
-       'red-row': p => p.data.make == 'Toyota'
+       'red-row': params => params.data.make == 'Toyota'
     }));
 
     const [rowData, setRowData] = useState([
@@ -105,32 +109,53 @@ function Table() {
         {
             headerName: 'Company',
             field: "make",
-            cellRenderer: myCellComponent,
-            checkboxSelection: true
+            checkboxSelection: true,
+            tooltipField: "price",
+            headerTooltip: "Tooltip for Athlete Column Header",
         },
-        { field: "model"},
+        { field: "model", tooltipField:'make'},
         {
             field: "price",
-            valueFormatter: p => "£" + p.value.toLocaleString(),
+            //valueFormatter: p => "£" + p.value.toLocaleString(),
             //valueGetter: p => p.data.make + '' + p.data.price,
             cellClassRules: {
-                'green-cell': p => p.value > 30000
-            }
+                'green-cell': params => params.value > 64000
+            },
+            tooltipField:'make'
         },
-        { field: "electric"}
-    ]);;
+        { field: "electric" },
+        {
+            headerName: 'Action',
+            field: "price",
+            cellRenderer: myCellComponent,
+        }
+        
+    ]);
+
+    let gridApi;
+    const onGridReady = (params) => { 
+        gridApi = params.api
+    }
    
+    const onExportClick = () => {
+        gridApi.exportDataAsCsv()
+    }
     return (
         <div className={"ag-theme-quartz"} style={{ width: '1024px', height: '500px' }}>
+            <button onClick={ () => onExportClick()}>Export</button>
             <AgGridReact
-                rowClassRules={ rowClassRules}
+                rowClassRules={rowClassRules}
                 rowData={rowData}
-                columnDefs={colDefs}
+               columnDefs={colDefs}
                 defaultColDef={defaultColDef}
                 pagination={true}
                 paginationPageSize={10}
                 paginationPageSizeSelector={[10, 20]}
-                rowSelection={'multiple'}                
+                rowSelection={'multiple'}
+                onGridReady={onGridReady}
+                enableBrowserTooltips={true}
+                tooltipShowDelay={0}
+                tooltipHideDelay={2000}
             />
         </div>
     );        
